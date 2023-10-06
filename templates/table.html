@@ -17,6 +17,8 @@
                     <input type="number" step="1" min="0" max="7" class="form-control" id="y_start" name="y_start" required>
                     <label for="y_end">Введите границу 2 для столбцов:</label>
                     <input type="number" step="1" min="0" max="7" class="form-control" id="y_end" name="y_end" required>
+                    <label for="year">Введите нужный год:</label>
+                    <input type="number" step="1" min="2002" max="2022" class="form-control" id="year" name="year" value="2002" required>
                 </div>
             <div class="container mb-3">
                 <button type="submit" class="btn btn-outline-dark btn-block">Показать таблицу данных</button>
@@ -40,6 +42,14 @@
                 {{ sliced_data_description |safe }}
                 <h2> Данные: </h2>
                 {{ data |safe }}
+                <h2> Минимальная, максимальная, средняя цена открытия летом (во все года): </h2>
+                {{ summer_prices |safe }}
+                <h2> Минимальная, максимальная, средняя цена открытия зимой по годам </h2>
+                {{ winter_price_stats |safe }}
+                <h2> Минимальная, максимальная, средняя цена открытия по годам </h2>
+                {{ year_price_stats |safe }}
+                <h2> Минимальная, максимальная, средняя цена открытия за выбранный год </h2>
+                {{ year_touch_stats |safe }}
             </table>
          </div>
 </body>
