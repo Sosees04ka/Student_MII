@@ -18,7 +18,7 @@
                     <label for="y_end">Введите границу 2 для столбцов:</label>
                     <input type="number" step="1" min="0" max="7" class="form-control" id="y_end" name="y_end" value="{{ setting_data['y_end'] | string }}" required>
                     <label for="year">Введите нужный год:</label>
-                    <input type="number" step="1" min="2002" max="2022" class="form-control" id="year" name="year" value="2002" required>
+                    <input type="number" step="1" min="2002" max="2022" class="form-control" id="year" name="year" value="{{ setting_data['year'] | string }}" required>
                 </div>
             <div class="container mb-3">
                 <button type="submit" class="btn btn-outline-dark btn-block">Показать таблицу данных</button>
