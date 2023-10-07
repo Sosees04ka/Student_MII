@@ -19,6 +19,18 @@
                     <input type="number" step="1" min="0" max="7" class="form-control" id="y_end" name="y_end" value="{{ setting_data['y_end'] | string }}" required>
                     <label for="year">Введите нужный год:</label>
                     <input type="number" step="1" min="2002" max="2022" class="form-control" id="year" name="year" value="{{ setting_data['year'] | string }}" required>
+                   <label for="checkset">Добавить в набор данных 10%:</label>
+                    <select class="form-control" id="checkset" name="checkset" required>
+                        <option value="Нет">Нет</option>
+                        <option value="Да">Да</option>
+                    </select>
+
+                    <label for="checkgraph">Обновить графики:</label>
+                    <select class="form-control" id="checkgraph" name="checkgraph" required>
+                        <option value="Нет">Нет</option>
+                        <option value="Да">Да</option>
+                    </select>
+
                 </div>
             <div class="container mb-3">
                 <button type="submit" class="btn btn-outline-dark btn-block">Показать таблицу данных</button>
@@ -51,6 +63,15 @@
                 <h2> Минимальная, максимальная, средняя цена открытия за выбранный год </h2>
                 {{ year_touch_stats |safe }}
             </table>
+            <h2> Графики: </h2>
+                <h3> Цены торгов </h3>
+                <img src="/static/images/OpenHigh.jpg">
+                <h3> Цены закрытия/открытия </h3>
+                <img src="/static/images/LowClose.jpg">
+                <h3> «Отрегулированная» цена закрытия </h3>
+                <img src="/static/images/AdjClose.jpg">
+                <h3> Количество акций, с которыми совершались сделки в торговый день </h3>
+                <img src="/static/images/Volume.jpg">
          </div>
 </body>
 </html>

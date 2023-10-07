@@ -1,21 +1,30 @@
+import matplotlib
+matplotlib.use('Agg')  # Используем Agg бэкенд вместо Tkinter
+from matplotlib import pyplot as plt
 import numpy as np
 from flask import Flask, render_template, request
 import pandas as pd
+import random
 
 app = Flask(__name__)
 
 dataset = pd.read_excel('Yamana_Gold.xlsx')
 
-#Задание 1
-summer_data = dataset[(dataset['Date'].dt.month >= 6) & (dataset['Date'].dt.month <= 8)]
-price_stats = summer_data['Open'].agg(['min', 'max', 'mean']).rename(index={'min': 'Минимальная цена открытия', 'max': 'Максимальная цена открытия', 'mean': 'Средняя цена открытия'})
 
-#Задание 2
-winter_data = dataset[(dataset['Date'].dt.month >= 1) & (dataset['Date'].dt.month <= 3)]
-winter_price_stats = winter_data.groupby(winter_data['Date'].dt.year, as_index=False)['Open'].agg({'min', 'mean', 'max'}).rename(columns={'min': 'Минимальная цена открытия', 'mean': 'Средняя цена открытия', 'max': 'Максимальная цена открытия'})
+def expand_dataset():
+    dataset = pd.read_excel('Yamana_Gold.xlsx')
+    random_index = random.randint(0, len(dataset) - 1)
+    num_new_rows = int(len(dataset) * 0.1)
+    dataset_2 = dataset.iloc[random_index: random_index + num_new_rows].copy()
 
-#Задание 4
-year_price_stats = dataset.groupby(dataset['Date'].dt.year, as_index=False)['Open'].agg({'min', 'mean', 'max'}).rename(columns={'min': 'Минимальная цена открытия', 'mean': 'Средняя цена открытия', 'max': 'Максимальная цена открытия'})
+    for column in dataset_2.select_dtypes(include=[np.number]):
+        mean_value = dataset_2[column].mean()
+        std_dev = dataset_2[column].std()
+        random_value = np.random.normal(mean_value, std_dev)
+        dataset_2[column] += random_value
+
+    expanded_dataset = pd.concat([dataset, dataset_2], ignore_index=True)
+    return expanded_dataset
 
 
 names = np.array([
@@ -48,9 +57,67 @@ def info():
 @app.route("/table", methods=['GET'])
 def table():
     setting_data = request.args
+
+    if setting_data['checkset'] == 'Да':
+        dataset = expand_dataset()
+    else:
+        dataset = pd.read_excel('Yamana_Gold.xlsx')
+
+    print(pd.read_excel('Yamana_Gold.xlsx'))
+    print(expand_dataset())
+
+    if setting_data['checkgraph'] == 'Да':
+        plt.plot(dataset['Date'], dataset['Open'], color='orange', label='Самая низкая цена торгов')
+        plt.plot(dataset['Date'], dataset['High'], color='blue', label='Самая высокая цена торгов')
+        plt.xlabel('Год')
+        plt.ylabel('Цена')
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2)
+        plt.savefig('static/images/OpenHigh.jpg', format='jpeg')
+        plt.clf()
+
+        plt.plot(dataset['Date'], dataset['Low'], color='orange', label='Цена открытия')
+        plt.plot(dataset['Date'], dataset['Close'], color='blue', label='Цена закрытия')
+        plt.xlabel('Год')
+        plt.ylabel('Цена')
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2)
+        plt.savefig('static/images/LowClose.jpg', format='jpeg')
+        plt.clf()
+
+        plt.plot(dataset['Date'], dataset['Adj Close'], color='blue', label='«Отрегулированная» цена закрытия')
+        plt.xlabel('Год')
+        plt.ylabel('Цена')
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2)
+        plt.savefig('static/images/AdjClose.jpg', format='jpeg')
+        plt.clf()
+
+        plt.plot(dataset['Date'], dataset['Volume'], color='blue',
+                 label='Количество акций, с которыми совершались сделки в торговый день')
+        plt.xlabel('Год')
+        plt.ylabel('Акций')
+        plt.legend(loc='upper center', bbox_to_anchor=(0.5, 1.15), ncol=2)
+        plt.savefig('static/images/Volume.jpg', format='jpeg')
+        plt.clf()
+
     sliced_data = dataset.iloc[int(setting_data['x_start']):int(setting_data['x_end']), int(setting_data['y_start']):int(setting_data['y_end'])]
     sliced_data_description = pd.DataFrame(np.column_stack((names, descriptions))).iloc[
                               int(setting_data['y_start']):int(setting_data['y_end'])]
+
+    # Задание 1
+    summer_data = dataset[(dataset['Date'].dt.month >= 6) & (dataset['Date'].dt.month <= 8)]
+    price_stats = summer_data['Open'].agg(['min', 'max', 'mean']).rename(
+        index={'min': 'Минимальная цена открытия', 'max': 'Максимальная цена открытия',
+               'mean': 'Средняя цена открытия'})
+
+    # Задание 2
+    winter_data = dataset[(dataset['Date'].dt.month >= 1) & (dataset['Date'].dt.month <= 3)]
+    winter_price_stats = winter_data.groupby(winter_data['Date'].dt.year, as_index=False)['Open'].agg(
+        {'min', 'mean', 'max'}).rename(columns={'min': 'Минимальная цена открытия', 'mean': 'Средняя цена открытия',
+                                                'max': 'Максимальная цена открытия'})
+
+    # Задание 4
+    year_price_stats = dataset.groupby(dataset['Date'].dt.year, as_index=False)['Open'].agg(
+        {'min', 'mean', 'max'}).rename(columns={'min': 'Минимальная цена открытия', 'mean': 'Средняя цена открытия',
+                                                'max': 'Максимальная цена открытия'})
 
     # Задание 3
     year_touch_data = dataset[(dataset['Date'].dt.year == int(setting_data['year']))]
