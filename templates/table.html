@@ -10,13 +10,13 @@
             <form action="http://127.0.0.1:5000/table" method="get">
                 <div class="form-group mb-3">
                     <label for="x_start">Введите границу 1 для строк:</label>
-                    <input type="number" step="1" min="0" max="5251" class="form-control" id="x_start" name="x_start" required>
+                    <input type="number" step="1" min="0" max="5251" class="form-control" id="x_start" name="x_start" value="{{ setting_data['x_start'] | string }}" required>
                     <label for="x_end">Введите границу 2 для строк</label>
-                    <input type="number" step="1" min="0" max="5251" class="form-control" id="x_end" name="x_end" required>
+                    <input type="number" step="1" min="0" max="5251" class="form-control" id="x_end" name="x_end" value="{{ setting_data['x_end'] | string }}" required>
                     <label for="y_start">Введите границу 1 для столбцов:</label>
-                    <input type="number" step="1" min="0" max="7" class="form-control" id="y_start" name="y_start" required>
+                    <input type="number" step="1" min="0" max="7" class="form-control" id="y_start" name="y_start" value="{{ setting_data['y_start'] | string }}" required>
                     <label for="y_end">Введите границу 2 для столбцов:</label>
-                    <input type="number" step="1" min="0" max="7" class="form-control" id="y_end" name="y_end" required>
+                    <input type="number" step="1" min="0" max="7" class="form-control" id="y_end" name="y_end" value="{{ setting_data['y_end'] | string }}" required>
                     <label for="year">Введите нужный год:</label>
                     <input type="number" step="1" min="2002" max="2022" class="form-control" id="year" name="year" value="2002" required>
                 </div>

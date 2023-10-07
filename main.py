@@ -65,7 +65,8 @@ def table():
                            summer_prices = pd.DataFrame(price_stats).to_html(classes='table', header=False),
                            winter_price_stats = pd.DataFrame(winter_price_stats).to_html(classes='table', index=False),
                            year_price_stats = pd.DataFrame(year_price_stats).to_html(classes='table', index=False),
-                           year_touch_stats = pd.DataFrame(year_touch_stats).to_html(classes='table', index=False))
+                           year_touch_stats = pd.DataFrame(year_touch_stats).to_html(classes='table', index=False),
+                           setting_data = setting_data)
 
 if __name__ == "__main__":
     app.run(debug=False)
