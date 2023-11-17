@@ -1,11 +1,13 @@
 import matplotlib
 
 from bloomFilter import BloomFilter
+from bloomFilterAnn import BloomFilterAnn
+from bloomFilterIrina import BloomFilterIrina
 
 matplotlib.use('Agg')  # Используем Agg бэкенд вместо Tkinter
 from matplotlib import pyplot as plt
 import numpy as np
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect
 import pandas as pd
 import random
 
@@ -35,8 +37,13 @@ descriptions = np.array([
     'Количество акций, с которыми совершались сделки в торговый день'
 ])
 
+ArrKeyWordAnn = ["salary", "company", "employee" ]
+
+ArrKeyWordIrina = ["vegetables", "fruits"]
+
 bloom_filter = BloomFilter(1000, 100)
-base_ip = "192.168.1."
+bloom_filterAnn = BloomFilterAnn(1000, 100)
+bloom_filterIrina = BloomFilterIrina(1000, 100)
 
 for i in range(len(names)):
     bloom_filter.add_to_filter(names[i])
@@ -44,6 +51,12 @@ for i in range(len(names)):
 for i in range(len(descriptions)):
     bloom_filter.add_to_filter(descriptions[i])
 bloom_filter.add_to_filter("Yamana Gold")
+
+for i in range(len(ArrKeyWordAnn)):
+    bloom_filterAnn.add_to_filter(ArrKeyWordAnn[i])
+
+for i in range(len(ArrKeyWordIrina)):
+    bloom_filterIrina.add_to_filter(ArrKeyWordIrina[i])
 
 def expand_dataset():
     dataset = pd.read_excel('Yamana_Gold.xlsx')
@@ -72,9 +85,13 @@ def info():
 def filter():
     setting_data = request.args
     if not bloom_filter.check_is_not_in_filter(setting_data['theme']):
-        return render_template('info.html')
+        return redirect('/')
+    if not bloom_filterAnn.check_is_not_in_filter(setting_data['theme']):
+        return redirect('http://127.0.0.1:5001/bloom_filter?keyWord=salary')
+    if not bloom_filterIrina.check_is_not_in_filter(setting_data['theme']):
+        return redirect('http://127.0.0.1:5002')
     else:
-        return render_template('home.html')
+        return render_template('notFoundTheme.html')
 
 @app.route("/table", methods=['GET'])
 def table():

@@ -3,7 +3,7 @@ import math
 from bitarray import bitarray
 
 
-class BloomFilter(object):
+class BloomFilterIrina(object):
 
     def __init__(self, size, number_expected_elements):
         self.size = size
