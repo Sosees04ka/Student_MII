@@ -16,30 +16,6 @@ app = Flask(__name__)
 
 dataset = pd.read_excel('Yamana_Gold.xlsx')
 
-bloom_filter = BloomFilter(1000000, 100000)
-base_ip = "192.168.1."
-bloom_filter.add_to_filter(base_ip + str(1))
-
-for i in range(1, 100000):
-    if not bloom_filter.check_is_not_in_filter(base_ip + str(i)):
-        print(base_ip+str(i))
-
-def expand_dataset():
-    dataset = pd.read_excel('Yamana_Gold.xlsx')
-    random_index = random.randint(0, len(dataset) - 1)
-    num_new_rows = int(len(dataset) * 0.1)
-    dataset_2 = dataset.iloc[random_index: random_index + num_new_rows].copy()
-
-    for column in dataset_2.select_dtypes(include=[np.number]):
-        mean_value = dataset_2[column].mean()
-        std_dev = dataset_2[column].std()
-        random_value = np.random.normal(mean_value, std_dev)
-        dataset_2[column] += random_value
-
-    expanded_dataset = pd.concat([dataset, dataset_2], ignore_index=True)
-    return expanded_dataset
-
-
 names = np.array([
     'Date',
     'Open',
@@ -58,6 +34,31 @@ descriptions = np.array([
     '«Отрегулированная» цена закрытия',
     'Количество акций, с которыми совершались сделки в торговый день'
 ])
+
+bloom_filter = BloomFilter(1000, 100)
+base_ip = "192.168.1."
+
+for i in range(len(names)):
+    bloom_filter.add_to_filter(names[i])
+
+for i in range(len(descriptions)):
+    bloom_filter.add_to_filter(descriptions[i])
+bloom_filter.add_to_filter("Yamana Gold")
+
+def expand_dataset():
+    dataset = pd.read_excel('Yamana_Gold.xlsx')
+    random_index = random.randint(0, len(dataset) - 1)
+    num_new_rows = int(len(dataset) * 0.1)
+    dataset_2 = dataset.iloc[random_index: random_index + num_new_rows].copy()
+
+    for column in dataset_2.select_dtypes(include=[np.number]):
+        mean_value = dataset_2[column].mean()
+        std_dev = dataset_2[column].std()
+        random_value = np.random.normal(mean_value, std_dev)
+        dataset_2[column] += random_value
+
+    expanded_dataset = pd.concat([dataset, dataset_2], ignore_index=True)
+    return expanded_dataset
 
 @app.route("/")
 def home():

@@ -5,7 +5,7 @@ from bitarray import bitarray
 
 class BloomFilter(object):
 
-    def __init__(self, size, number_expected_elements=100000):
+    def __init__(self, size, number_expected_elements):
         self.size = size
         self.number_expected_elements = number_expected_elements
 
