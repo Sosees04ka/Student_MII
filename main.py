@@ -1,4 +1,7 @@
 import matplotlib
+
+from bloomFilter import BloomFilter
+
 matplotlib.use('Agg')  # Используем Agg бэкенд вместо Tkinter
 from matplotlib import pyplot as plt
 import numpy as np
@@ -6,10 +9,20 @@ from flask import Flask, render_template, request
 import pandas as pd
 import random
 
+import math
+from bitarray import bitarray
+
 app = Flask(__name__)
 
 dataset = pd.read_excel('Yamana_Gold.xlsx')
 
+bloom_filter = BloomFilter(1000000, 100000)
+base_ip = "192.168.1."
+bloom_filter.add_to_filter(base_ip + str(1))
+
+for i in range(1, 100000):
+    if not bloom_filter.check_is_not_in_filter(base_ip + str(i)):
+        print(base_ip+str(i))
 
 def expand_dataset():
     dataset = pd.read_excel('Yamana_Gold.xlsx')
@@ -54,11 +67,19 @@ def home():
 def info():
     return render_template('info.html')
 
+@app.route("/filter", methods=['GET'])
+def filter():
+    setting_data = request.args
+    if not bloom_filter.check_is_not_in_filter(setting_data['theme']):
+        return render_template('info.html')
+    else:
+        return render_template('home.html')
+
 @app.route("/table", methods=['GET'])
 def table():
     setting_data = request.args
 
-    if setting_data['checkset'] == 'Да':
+    if  setting_data['checkset'] == 'Да':
         dataset = expand_dataset()
     else:
         dataset = pd.read_excel('Yamana_Gold.xlsx')
