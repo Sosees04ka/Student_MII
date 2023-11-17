@@ -5,10 +5,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container pt-5">
-        <h1>Кашин Максим. ПИбд-32. Вариант 13. Цены на акции </h1>
-        <form action="http://127.0.0.1:5000/table" method="get">
-            <div class="form-group mb-3">
+             <div class="container pt-5">
+            <h1>Кашин Максим. ПИбд-32. Вариант 13. Цены на акции </h1>
+            <form action="http://127.0.0.1:5000/table" method="get">
+                <div class="form-group mb-3">
                 <label for="x_start">Введите границу 1 для строк:</label>
                 <input type="number" step="1" min="0" max="5251" class="form-control" id="x_start" name="x_start" required>
                 <label for="x_end">Введите границу 2 для строк</label>
@@ -19,7 +19,19 @@
                 <input type="number" step="1" min="0" max="7" class="form-control" id="y_end" name="y_end" required>
                 <label for="year">Введите нужный год:</label>
                 <input type="number" step="1" min="2002" max="2022" class="form-control" id="year" name="year" value="2002" required>
-               </div>
+                   <label for="checkset">Добавить в набор данных 10%:</label>
+                    <select class="form-control" id="checkset" name="checkset" required>
+                        <option value="Нет">Нет</option>
+                        <option value="Да">Да</option>
+                    </select>
+
+                    <label for="checkgraph">Обновить графики:</label>
+                    <select class="form-control" id="checkgraph" name="checkgraph" required>
+                        <option value="Нет">Нет</option>
+                        <option value="Да">Да</option>
+                    </select>
+
+                </div>
             <div class="container mb-3">
                 <button type="submit" class="btn btn-outline-dark btn-block">Показать таблицу данных</button>
             </div>
@@ -29,6 +41,6 @@
                 <button type="submit" class="btn btn-outline-dark btn-block">Информация с офф.сайта</button>
                 </div>
             </form>
-    </div>
+        </div>
 </body>
 </html>
