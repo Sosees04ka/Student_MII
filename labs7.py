@@ -36,20 +36,21 @@ def kmeans(X, k, max_iters=100):
 
     return labels, centroids
 
-k = 3
+k = 10
 labels, centroids = kmeans(X, k)
 
 # Визуализация результатов кластеризации
 plt.scatter(opening_prices, closing_prices, c=labels, cmap='viridis', s=1)
 
 # Настройка внешнего вида графика
-plt.xlabel('Opening Price')
-plt.ylabel('Closing Price')
-plt.title('Clustering of Opening and Closing Prices')
+plt.xlabel('Открытие')
+plt.ylabel('Закрытие')
+plt.title('')
+
+# Вывод коэффициентов регрессии на графике
+plt.text(0, 22, f"Центроиды: {centroids}", fontsize=10)
 
 # Отображение графика
 plt.show()
 
-# Вывод результатов
-print("Метки кластеров:", labels)
-print("Центроиды:", centroids)
+
